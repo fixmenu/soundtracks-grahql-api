@@ -76,6 +76,7 @@ enum SearchType {
 }
 
 input SearchFilter {
+    text: String
     album: String
     artist: String
     track: String

@@ -19,8 +19,12 @@ public class SpotifyTokenStore {
 
     @PostConstruct
     public void init() {
-        AccessToken accessToken = refreshToken();
-        log.info("Access token generated: {}", accessToken);
+        try {
+            AccessToken accessToken = refreshToken();
+            log.info("Access token generated: {}", accessToken);
+        } catch (Exception e) {
+            log.error("Failed to generate access token", e);
+        }
     }
 
     public AccessToken refreshToken() {

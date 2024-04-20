@@ -65,7 +65,8 @@ public class SpotifyClient {
 
     @NotNull
     private static String getQuery(SearchFilter filter) {
-        String query = filter.getAlbum() != null ? "album:" + filter.getAlbum() : "";
+        String query = filter.getText() != null ? filter.getText() : "";
+        query += filter.getAlbum() != null ? "album:" + filter.getAlbum() : "";
         query += filter.getArtist() != null ? " artist:" + filter.getArtist() : "";
         query += filter.getTrack() != null ? " track:" + filter.getTrack() : "";
         query += filter.getYear() != null ? " year:" + filter.getYear() : "";
