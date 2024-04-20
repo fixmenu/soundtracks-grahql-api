@@ -11,12 +11,12 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MappedPlaylist extends Playlist {
-
+/*
     @JsonSetter("tracks")
     public void mapTracks(JsonNode tracks) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode items = tracks.get("items");
-        List<MappedTrack> trackList = mapper.readValue(items.traverse(), new TypeReference<>() {});
-        this.setTracks(trackList.stream().map(MappedTrack::getTrack).toList());
-    }
+       // List<MappedTrack> trackList = mapper.readValue(items.traverse(), new TypeReference<>() {});
+       // this.setTracks(trackList.stream().map(MappedTrack::getTrack).toList());
+    }*/
 }

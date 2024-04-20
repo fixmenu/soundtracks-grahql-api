@@ -1,10 +1,13 @@
 package com.example.soundtracks.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.List;
 import java.io.IOException;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PlaylistCollection {
 
     List<MappedPlaylist> playlists;

@@ -7,6 +7,22 @@ type Playlist {
     "Describes the playlist, what to expect and entices the user to listen."
     description: String
     "The tracks of the playlist."
+    tracks: TrackBrief!
+}
+
+type TrackBrief {
+    href: String!
+    total: Int!
+}
+
+type PlayListWithTracks {
+    "The ID for the playlist."
+    id: ID!
+    "The name of the playlist."
+    name: String!
+    "Describes the playlist, what to expect and entices the user to listen."
+    description: String
+    "The tracks of the playlist."
     tracks: [Track!]!
 }
 
@@ -28,7 +44,8 @@ type Query {
     "Playlists hand-picked to be featured to all users."
     featuredPlaylists: [Playlist!]!
     "Retrieves a specific playlist."
-    playlist(id: ID!): Playlist
+    playlist(id: ID!): PlayListWithTracks
+    search(filter: SearchFilter!): SearchResults!
 }
 
 type Mutation {
@@ -44,7 +61,7 @@ type AddItemsToPlaylistPayload {
     "Human-readable message for the UI"
     message: String!
     "The playlist that contains the newly added items"
-    playlist: Playlist
+    playlist: PlayListWithTracks
 }
 
 input AddItemsToPlaylistInput {
@@ -52,4 +69,89 @@ input AddItemsToPlaylistInput {
     playlistId: ID!
     "A comma-separated list of Spotify URIs to add."
     uris: [String!]!
+}
+
+enum SearchType {
+    album, artist, playlist, track
+}
+
+input SearchFilter {
+    album: String
+    artist: String
+    track: String
+    year: String
+    type: SearchType!
+}
+
+type AlbumSearchResult {
+    album_type: String
+    artists: [Artist]
+    images: [Image]
+    name: String
+    release_date: String
+    total_tracks: Int
+    type: String
+}
+
+type ArtistSearchResult {
+    album_type: String
+    artists: [Artist]
+    images: [Image]
+    name: String
+    release_date: String
+    total_tracks: Int
+    type: String
+}
+
+type TrackSearchResult {
+    id: ID!
+    album: AlbumSearchResult,
+    artists: [Artist]
+    followers: Int
+    images: [Image]
+    preview_url: String
+    name: String
+    popularity: Int
+    type: String
+}
+
+type PlaylistSearchResult {
+    id: ID!
+    description: String
+    images: [Image]
+    name: String
+    owner: Owner!
+    type: String
+
+}
+
+type SearchResults {
+    albums: [AlbumSearchResult]
+    artist: [ArtistSearchResult]
+    tracks: [TrackSearchResult]
+    playlists: [PlaylistSearchResult]
+}
+
+type Artist {
+    id: ID!
+    name: String!
+    type: String
+}
+
+type Image {
+    height: Int
+    url: String
+    width: Int
+}
+
+type Owner {
+    id: ID!
+    display_name: String
+    external_urls: ExternalUrls
+    href: String
+    type: String
+}
+
+type ExternalUrls {
+    spotify: String
 }

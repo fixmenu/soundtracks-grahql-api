@@ -1,10 +1,8 @@
 package com.example.soundtracks.datafetchers;
+
 import com.example.soundtracks.datasources.SpotifyClient;
-import com.example.soundtracks.models.MappedPlaylist;
-import com.example.soundtracks.models.PlaylistCollection;
-import com.example.soundtracks.models.Snapshot;
-import com.example.soundtracks.generated.types.AddItemsToPlaylistInput;
-import com.example.soundtracks.generated.types.AddItemsToPlaylistPayload;
+import com.example.soundtracks.generated.types.*;
+import com.example.soundtracks.models.*;
 import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.DgsMutation;
@@ -15,8 +13,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import com.netflix.graphql.dgs.InputArgument;
-import com.example.soundtracks.generated.types.Playlist;
+
 import java.util.Objects;
+
 @DgsComponent
 public class PlaylistDataFetcher {
     private final SpotifyClient spotifyClient;
@@ -25,15 +24,23 @@ public class PlaylistDataFetcher {
     public PlaylistDataFetcher(SpotifyClient spotifyClient) {
         this.spotifyClient = spotifyClient;
     }
+
     @DgsQuery
     public List<MappedPlaylist> featuredPlaylists() {
         PlaylistCollection response = spotifyClient.featuredPlaylistsRequest();
         return response.getPlaylists();
-    };
+    }
+
+    ;
 
     @DgsQuery
-    public MappedPlaylist playlist(@InputArgument String id) {
+    public MappedPlaylistWithTracks playlist(@InputArgument String id) {
         return spotifyClient.playlistRequest(id);
+    }
+
+    @DgsQuery
+    public SearchResultCollection search(@InputArgument SearchFilter filter) {
+        return spotifyClient.search(filter);
     }
 
     @DgsMutation
@@ -48,7 +55,7 @@ public class PlaylistDataFetcher {
         if (snapshot != null) {
             String snapshotId = snapshot.id();
             if (Objects.equals(snapshotId, playlistId)) {
-                Playlist playlist = new Playlist();
+                PlayListWithTracks playlist = new PlayListWithTracks();
                 playlist.setId(playlistId);
 
                 payload.setCode(200);
@@ -67,10 +74,10 @@ public class PlaylistDataFetcher {
         return payload;
     }
 
-    @DgsData(parentType="AddItemsToPlaylistPayload", field="playlist")
-    public MappedPlaylist getPayloadPlaylist(DgsDataFetchingEnvironment dfe) {
+    @DgsData(parentType = "AddItemsToPlaylistPayload", field = "playlist")
+    public MappedPlaylistWithTracks getPayloadPlaylist(DgsDataFetchingEnvironment dfe) {
         AddItemsToPlaylistPayload payload = dfe.getSource();
-        Playlist playlist = payload.getPlaylist();
+        PlayListWithTracks playlist = payload.getPlaylist();
 
         if (playlist != null) {
             String playlistId = playlist.getId();

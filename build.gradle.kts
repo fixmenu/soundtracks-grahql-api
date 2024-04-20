@@ -1,3 +1,4 @@
+import com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask
 
 plugins {
 	java
@@ -17,11 +18,15 @@ repositories {
 	mavenCentral()
 }
 
+
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter")
-	implementation(platform("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:7.6.0"))
+	implementation(platform("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:8.4.0"))
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
@@ -31,5 +36,6 @@ tasks.withType<Test> {
 
 tasks.generateJava {
 	packageName = "com.example.soundtracks.generated"
+	generateClient = true
 }
 
